@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void initView(){
         findViewById(R.id.btn_login).setOnClickListener(this);
+        findViewById(R.id.btn_regist).setOnClickListener(this);
     }
 
     @Override
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.btn_login:
                 startActivity(new Intent(this,LoginActivity.class));
+                break;
+            case R.id.btn_regist:
+                startActivity(new Intent(this, RegistActivity.class));
                 break;
             default:
                 break;
