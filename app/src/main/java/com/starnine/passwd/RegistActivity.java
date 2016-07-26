@@ -29,6 +29,8 @@ private EditText et_passwd;
         et_passwd=(EditText)findViewById(R.id.et_passwd);
         et_passwd2=(EditText)findViewById(R.id.et_passwd2);
         findViewById(R.id.btn_regist).setOnClickListener(this);
+
+        findViewById(R.id.tv_input).setOnClickListener(this);
     }
     private Toast toast;
     public void toast(String s){
@@ -57,6 +59,9 @@ private EditText et_passwd;
                     finish();
                     startActivity(new Intent(this,LoginActivity.class));
                 }
+                break;
+            case R.id.tv_input:
+                toast("导入");
                 break;
         }
     }

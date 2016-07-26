@@ -315,6 +315,7 @@ public class HomeActivity extends AppCompatActivity {
         int i=1,j=1;
         menu.add(1,i++,j++,"新增根节点");
         menu.add(1,i++,j++,"新增项");
+        menu.add(1,i++,j++,"导出");
         return true;
     }
     private Toast toast;
@@ -440,6 +441,9 @@ public class HomeActivity extends AppCompatActivity {
                 });
                 dialog.show();
             }
+                break;
+            case 3:
+                toast("导出");
                 break;
         }
         return true;

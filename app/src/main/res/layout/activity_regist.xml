@@ -64,4 +64,13 @@
             android:text="注册"
             android:id="@+id/btn_regist" />
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="或者选择导入"
+        android:id="@+id/tv_input"
+        android:clickable="true"
+        android:textSize="16sp"
+        android:textColor="#33d"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>
