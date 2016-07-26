@@ -1,5 +1,7 @@
 package com.starnine.passwd.data;
 
+import com.starnine.passwd.utils.User;
+
 /**
  * Created by licheng on 16-7-18.
  * 保存用户名，密码，id，所属目录id
@@ -23,6 +25,8 @@ public class PasswdItem {
     }
 
     public String getPassword() {
+        //TODO Magic is here
+        User.getKey();
         return password;
     }
 
@@ -35,6 +39,8 @@ public class PasswdItem {
     }
 
     public void setPassword(String password) {
+        //TODO Magic is here
+        User.getKey();
         this.password = password;
     }
 

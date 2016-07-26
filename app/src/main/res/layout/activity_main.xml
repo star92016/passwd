@@ -26,5 +26,10 @@
             android:layout_height="wrap_content"
             android:text="注册"
             android:id="@+id/btn_regist" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="主界面"
+            android:id="@+id/btn_home" />
     </LinearLayout>
 </RelativeLayout>

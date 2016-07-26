@@ -1,5 +1,8 @@
 package com.starnine.passwd;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +17,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        SharedPreferences sp=getSharedPreferences("config", Context.MODE_PRIVATE);
+        if(sp.getString("passwd","").equals("")){
+            finish();
+            startActivity(new Intent(this,RegistActivity.class));
+            return;
+        }
+
+        if(User.IsLogin()){
+            finish();
+            startActivity(new Intent(this,HomeActivity.class));
+            return;
+        }
         findViewById(R.id.btn_login).setOnClickListener(this);
         et_passwd=(EditText) findViewById(R.id.et_passwd);
     }
@@ -33,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 passwd=et_passwd.getText().toString().trim();
                 if(User.Login(this,passwd)){
                     toast("登录成功");
+                    finish();
+                    startActivity(new Intent(this,HomeActivity.class));
                 }else{
                     toast("密码错误");
                     et_passwd.setText("");

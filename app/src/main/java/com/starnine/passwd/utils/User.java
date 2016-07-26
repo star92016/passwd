@@ -11,17 +11,27 @@ import java.security.NoSuchAlgorithmException;
  */
 public class User {
     private final static String SALT="2&R3@q;l";
-    public static String key="";
-    public static boolean Login(Context context, String passwd){
+    private static String key="";
+    public static boolean CheckUser(Context context,String passwd){
         String key=MD5(passwd);
         String s=MD5(key+SALT);
         SharedPreferences sp=context.getSharedPreferences("config",Context.MODE_PRIVATE);
         if(sp.getString("passwd","").equals(s)){
-            //do something to key
-            User.key=key;
             return true;
         }else
             return false;//wrong password
+    }
+    public static String getKey(){
+        return key;
+    }
+    private static boolean islogin=false;
+    public static boolean IsLogin(){
+        return islogin;
+    }
+    public static boolean Login(Context context, String passwd){
+        //TODO GET key from passwd
+        User.key=passwd;
+        return (islogin=CheckUser(context,passwd));
     }
     public static boolean Regist(Context context,String passwd){
         String s=MD5(MD5(passwd)+SALT);
