@@ -3,36 +3,39 @@ package com.starnine.passwd;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.starnine.passwd.utils.LoadSave;
 import com.starnine.passwd.utils.User;
+
+import java.io.File;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText et_passwd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
         SharedPreferences sp=getSharedPreferences("config", Context.MODE_PRIVATE);
         if(sp.getString("passwd","").equals("")){
             finish();
             startActivity(new Intent(this,RegistActivity.class));
             return;
         }
-
         if(User.IsLogin()){
             finish();
             startActivity(new Intent(this,HomeActivity.class));
             return;
         }
+        setContentView(R.layout.activity_login);
         findViewById(R.id.btn_login).setOnClickListener(this);
         et_passwd=(EditText) findViewById(R.id.et_passwd);
-    }
+      }
     private Toast toast;
     public void toast(String s){
         if(toast==null)

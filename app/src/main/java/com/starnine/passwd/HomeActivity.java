@@ -3,6 +3,7 @@ package com.starnine.passwd;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -26,9 +27,11 @@ import android.widget.Toast;
 
 import com.starnine.passwd.data.PasswdItem;
 import com.starnine.passwd.data.TypeItem;
+import com.starnine.passwd.utils.LoadSave;
 import com.starnine.passwd.utils.MySQLiteOpenHelper;
 import com.starnine.passwd.utils.User;
 
+import java.io.File;
 import java.util.Vector;
 
 public class HomeActivity extends AppCompatActivity {
@@ -36,14 +39,14 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+
         if(!User.IsLogin()){
             toast("未登录");
             finish();
             startActivity(new Intent(this,LoginActivity.class));
             return;
         }
-
+        setContentView(R.layout.activity_home);
         mySQLiteOpenHelper=new MySQLiteOpenHelper(this);
         initView();
     }
@@ -443,7 +446,13 @@ public class HomeActivity extends AppCompatActivity {
             }
                 break;
             case 3:
-                toast("导出");
+                new Thread(){
+                    public void run(){
+                        LoadSave.Save(new File(Environment.getExternalStorageDirectory().
+                                getAbsolutePath()+"/passwd"));
+                    }
+                }.start();
+                toast("导出成功");
                 break;
         }
         return true;

@@ -4,14 +4,18 @@ package com.starnine.passwd;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.starnine.passwd.utils.LoadSave;
 import com.starnine.passwd.utils.MySQLiteOpenHelper;
 import com.starnine.passwd.utils.User;
+
+import java.io.File;
 
 public class RegistActivity extends AppCompatActivity implements View.OnClickListener{
 private EditText et_passwd;
@@ -19,13 +23,13 @@ private EditText et_passwd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_regist);
         SharedPreferences sp=getSharedPreferences("config", Context.MODE_PRIVATE);
         if(!sp.getString("passwd","").equals("")){
             toast("你已注册");
             finish();
             return;
         }
+        setContentView(R.layout.activity_regist);
         et_passwd=(EditText)findViewById(R.id.et_passwd);
         et_passwd2=(EditText)findViewById(R.id.et_passwd2);
         findViewById(R.id.btn_regist).setOnClickListener(this);
@@ -61,7 +65,13 @@ private EditText et_passwd;
                 }
                 break;
             case R.id.tv_input:
-                toast("导入");
+                new Thread(){
+                    public void run(){
+                        new LoadSave().Load(new File(Environment.getExternalStorageDirectory().
+                                getAbsolutePath()+"/passwd"));
+                    }
+                }.start();
+                toast("导入成功");
                 break;
         }
     }
