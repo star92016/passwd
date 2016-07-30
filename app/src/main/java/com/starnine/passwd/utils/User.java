@@ -12,6 +12,8 @@ import java.security.NoSuchAlgorithmException;
 public class User {
     private final static String SALT="2&R3@q;l";
     private static String key="";
+    private static boolean islogin = false;
+
     public static boolean CheckUser(Context context,String passwd){
         String key=MD5(passwd);
         String s=MD5(key+SALT);
@@ -21,10 +23,11 @@ public class User {
         }else
             return false;//wrong password
     }
+
     public static String getKey(){
         return key;
     }
-    private static boolean islogin=false;
+
     public static boolean IsLogin(){
         return islogin;
     }
@@ -33,6 +36,14 @@ public class User {
         User.key=passwd;
         return (islogin=CheckUser(context,passwd));
     }
+
+    /**
+     * 注册一个用户，即在SharedPreference中存储一个密码
+     *
+     * @param context 上下文
+     * @param passwd  密码
+     * @return 是否注册成功
+     */
     public static boolean Regist(Context context,String passwd){
         String s=MD5(MD5(passwd)+SALT);
         SharedPreferences sp=context.getSharedPreferences("config",Context.MODE_PRIVATE);
