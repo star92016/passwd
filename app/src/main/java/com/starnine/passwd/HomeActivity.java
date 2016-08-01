@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,8 @@ import java.io.File;
 import java.util.Vector;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private long exitTime=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +128,14 @@ public class HomeActivity extends AppCompatActivity {
     }
     @Override
     public boolean onContextItemSelected(final MenuItem item) {
+        long cur=System.currentTimeMillis();
+        if(cur-powerTime>OUTTIME){
+
+        }else{
+            onContextItemSelected2(item);
+            return true;
+        }
+
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         final EditText et_info=new EditText(this);
         et_info.setHint("输入密码验证身份");
@@ -147,6 +158,7 @@ public class HomeActivity extends AppCompatActivity {
                     case 2:
                         //ok
                         onContextItemSelected2(item);
+                        powerTime=System.currentTimeMillis();
                         break;
                 }
             }
@@ -184,7 +196,7 @@ public class HomeActivity extends AppCompatActivity {
 
         return true;
     }
-
+    private long powerTime=0;
     public boolean onContextItemSelected2(MenuItem item) {
 
 
@@ -329,9 +341,16 @@ public class HomeActivity extends AppCompatActivity {
             toast.setText(s);
         toast.show();
     }
-
+public static final long OUTTIME=60000;
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        long cur=System.currentTimeMillis();
+        if(cur-powerTime>OUTTIME){
+
+        }else{
+            onOptionsItemSelected2(item);
+            return true;
+        }
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         final EditText et_info=new EditText(this);
         et_info.setHint("输入密码验证身份");
@@ -353,6 +372,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case 2:
                         //ok
+                        powerTime=System.currentTimeMillis();
                         onOptionsItemSelected2(item);
                         break;
                 }
@@ -456,6 +476,23 @@ public class HomeActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                // 返回键功能的实现
+                exitTime = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void updateElv_list(){
