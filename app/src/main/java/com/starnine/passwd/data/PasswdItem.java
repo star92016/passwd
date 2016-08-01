@@ -1,5 +1,8 @@
 package com.starnine.passwd.data;
 
+import android.util.Log;
+
+import com.starnine.passwd.utils.DESTest;
 import com.starnine.passwd.utils.User;
 
 /**
@@ -26,8 +29,16 @@ public class PasswdItem {
 
     public String getPassword() {
         //TODO Magic is here
-        User.getKey();
-        return password;
+        StackTraceElement stack[] = (new Throwable()).getStackTrace();
+        StackTraceElement ste=stack[1];
+
+        if(ste.getClassName().equals("com.starnine.passwd.utils.MySQLiteOpenHelper")){
+            return password;
+        }else {
+            String data = DESTest.decrypt(password, User.getKey());
+            if (data == null) data = "";
+            return data;
+        }
     }
 
     public void setId(int id) {
@@ -40,8 +51,15 @@ public class PasswdItem {
 
     public void setPassword(String password) {
         //TODO Magic is here
-        User.getKey();
-        this.password = password;
+        StackTraceElement stack[] = (new Throwable()).getStackTrace();
+        StackTraceElement ste=stack[1];
+
+        if(ste.getClassName().equals("com.starnine.passwd.utils.MySQLiteOpenHelper")){
+            this.password=password;
+        }else{
+            this.password = DESTest.encrypt(password,User.getKey());
+            if(this.password==null)this.password="";
+        }
     }
 
     public void setUsername(String username) {

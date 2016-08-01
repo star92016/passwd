@@ -1,4 +1,7 @@
 package com.starnine.passwd.utils;
+/** This class can only put in this package,
+ *  if you change it ,change PasswdItem meanwile.
+ */
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,7 +22,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         super(context, name, factory, version);
     }
     public MySQLiteOpenHelper(Context context){
-        this(context,"passwd.db",null,1);
+        this(context,"passwd.db",null,2);
     }
 
     @Override
@@ -40,8 +43,17 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if(oldVersion==1&&newVersion==2){
+            Vector<PasswdItem> vector=getAllPasswd(sqLiteDatabase);
+            for(PasswdItem pi:vector){
+                String p=pi.getPassword();
+                p = DESTest.encrypt(p,User.getKey());
+                if(p==null)p="";
+                pi.setPassword(p);
+                upatePasswd(pi,sqLiteDatabase);
+            }
+        }
     }
     public Vector<PasswdItem> getPasswdByType(TypeItem typeItem){
         return getPasswdByType(typeItem.getId());
@@ -80,10 +92,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         sqLiteDatabase.close();
         return vector;
     }
-
-    public Vector<PasswdItem> getAllPasswd(){
+    private Vector<PasswdItem> getAllPasswd(SQLiteDatabase sqliteDatabase){
         Vector<PasswdItem> vector=new Vector<>();
-        SQLiteDatabase sqliteDatabase=getReadableDatabase();
         Cursor cursor=sqliteDatabase.rawQuery("select * from passwditem",null);
         int id=cursor.getColumnIndex("id"),pid=cursor.getColumnIndex("pid"),
                 username=cursor.getColumnIndex("username"),
@@ -97,6 +107,12 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
             vector.add(passwdItem);
         }
         cursor.close();
+        return vector;
+    }
+    public Vector<PasswdItem> getAllPasswd(){
+        Vector<PasswdItem> vector;
+        SQLiteDatabase sqliteDatabase=getReadableDatabase();
+        vector=getAllPasswd(sqliteDatabase);
         sqliteDatabase.close();
         return vector;
     }
@@ -118,6 +134,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
                 +"',username='"+passwdItem.getUsername()+"',password='"+
                 passwdItem.getPassword()+"' where id="+passwdItem.getId());
         sqliteDatabase.close();
+    }
+    private void upatePasswd(PasswdItem passwdItem,SQLiteDatabase sqliteDatabase){
+        sqliteDatabase.execSQL("update passwditem set pid='"+passwdItem.getPid()
+                +"',username='"+passwdItem.getUsername()+"',password='"+
+                passwdItem.getPassword()+"' where id="+passwdItem.getId());
     }
 
     public void addType(TypeItem typeItem){

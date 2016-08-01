@@ -33,7 +33,16 @@ public class User {
     }
     public static boolean Login(Context context, String passwd){
         //TODO GET key from passwd
-        User.key=passwd;
+        String key=MD5(passwd).toUpperCase();
+        byte[]b1=DESTest.Hex2byte(key);
+        byte[]b2=new byte[4];
+        for (int i=0;i<b2.length;i++){
+            b2[i]=0;
+        }
+        for(int i=0;i<b1.length;i++){
+            b2[i%4]+=b1[i];
+        }
+        User.key=DESTest.byte2Hex(b2);
         return (islogin=CheckUser(context,passwd));
     }
 
